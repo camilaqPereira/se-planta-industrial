@@ -285,7 +285,75 @@ No microcontrolador ATMega328/p, a interface I2C, chamada de TWI (Two Wire Seria
 
 ### Configuração de periféricos
 
-<details><summary><b>Portas I/O</b></summary></details>
-<details><summary><b>Interrupções</b></summary></details>
-<details><summary><b>Timers</b></summary></details>
-<details><summary><b>Leituras ADC</b></summary></details>
+<details><summary><b>Portas I/O</b></summary>
+
+#### Portas I/O
+
+Tabela 1 e Tabela 2 listam, respectivamente, as portas I/O utilizadas (e suas configurações) pelo chão de fábrica e supervisor.
+
+| Pino | Direção | Descrição |
+| :---: | :---: | :---: |
+| PD5 | Saída digital | Mestre: utilizado para solicitar ao mestre que inicie uma comunicação no modo leitura |
+| PB3 | Saída PWM | Motor CC 1 |
+| PD3 | Saída PWM | Motor CC 2 |
+| A7 | Entrada analógica | LM35 |
+| A6 | Entrada analógica | LDR |
+| PC2 | Saída digital | Led verde |
+| PC3 | Saída digital | Led vermelho |
+| PD6 | Saída PWM | Buzzer passivo |
+| PB4 | Entrada digital | SW-520D |
+| PD2 | Entrada digital | Botão |
+| PB1 | Saída PWM | Servo motor |
+| PC0 | Saída digital | Trigger para HC-SR04 |
+| PC1 | Entrada digital | Echo para HC-SR04 |
+
+<p>Tabela 1: Portas I/O usadas pelo chão de fábrica e suas respectivas configurações</p>
+
+| Pino | Direção | Descrição |
+| :---: | :---: | :---: |
+| A0 | Entrada analógica | Potênciometro |
+| A1 | Entrada analógica | Potênciometro |
+| PD2 | Entrada digital | Botão |
+
+<p>Tabela 2: Portas I/O usadas pelo supervisor e suas respectivas configurações</p>
+
+
+</details>
+<details><summary><b>Interrupções</b></summary>
+
+#### Interrupções
+- Chão de fábrica:
+	- INT0: utilizado para realizar a leitura do botão. Esta interrupção foi configurada para disparar na borda de descida;
+	- TIMER2_OVF: a interrupção no estouro do timer 2 foi ativada para realizar a leitura multiplexada ADC e leitura do sensor SW-520D de forma periódica;
+	- ADC: a leitura ADC por interrupção foi ativada. Os canais ADC usadosno projeto são intercalados;
+	- TWI: a comunicação TWI foi implementada por meio de interrupções.
+- Supervisor:
+  	- TIMER0_OVF: a interrupção no estouro do timer 0 foi ativada para realizar a leitura multiplexada ADC de forma periódica;
+  	- ADC: a leitura ADC por interrupção foi ativada. Os canais ADC usadosno projeto são intercalados;
+	- TWI: a comunicação TWI foi implementada por meio de interrupções.
+
+</details>
+
+<details><summary><b>Timers</b></summary>
+
+#### Timers
+- Chão de fábrica:
+	- TIMER0: utilizado para o controle do buzzer passivo. Este timer foi configurado para o modo PWM rápido com prescaler igual a 8.
+	- TIMER1: utilizado para o controle do servo motor e leitura do sensor ultrassônico. Este timer foi configurado para o modo PWM rápido com prescaler igual a 8. O ICR1 foi
+ definido em 39999, produzindo um sinal com período de aproximadamente 20 ms. 
+	- TIMER2: utilizado para o controle dos motores CC. Este timer foi configurado para o modoPWM com fase corrigida com prescaler de 8.
+ - Supervisor:
+   	- TIMER0: utilizado para as leituras ADC. Este temporizador foi configurado para o modo normal com prescaler de 1024.
+   	- TIMER1: utilizado para as atualizações do status da produção. Este temporizador foi configurado para o modo CTC com prescaler de 1024. O TOP foi definido em 46874, gerando
+um período de contagem de 3s (**NÃO FUNCIONAL**)
+</details>
+
+
+<details><summary><b>Leituras ADC</b></summary>
+
+#### Leituras ADC
+
+O ADC foi configurado para o modo contínuo com prescaler de 128 em ambas as partes. O bit ADATE não foi ativado, pois mais de um canal do ADC foi utilizado. A sinalização para o 
+início de uma nova conversão é realizada no estouro do timer 2 e timer 1 no chão de fábrica e no supervisor, respectivamente.
+
+</details>
