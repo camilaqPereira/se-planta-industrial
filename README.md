@@ -18,6 +18,9 @@ de segurança para garantir uma operação segura e precisa.</p>
 
 ## Sobre o projeto
 
+Este sistema monitora uma linha de fabricação de blocos de madeira e é dividido em duas entidades: Supervisor e o Chão de fábrica. O Chão de Fábrica, atuando como encarregado, gerencia 
+diretamente a linha de produção por meio de seus sensores e atuadores. Parâmetros críticos como temperatura, inclinação, presença humana e nível de óleo do tanque são monitorados continuamente para garantir uma produção segura. Por sua vez, o Supervisor possui total controle sobre a velocidade dos motores, podendo ainda efetuar paradas emergenciais na produção quando necessário. 
+Ambas as entidades foram implementada com a plataforma Arduino Nano e se comunicam através do protocolo I2C, o que promove integração ao sistema.
 <details>
   <summary>
     <h4> ⚙️ Periféricos utilizados </h4>  
