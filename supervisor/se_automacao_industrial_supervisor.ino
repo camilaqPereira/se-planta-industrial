@@ -189,52 +189,52 @@ ISR(INT1_COMPA_vect){
 
 
 ISR(TWI_vect) {
-    switch (TWSR & 0xF8) { // Máscara para ignorar os 3 bits menos significativos
-        // Condição de START
-        case 0x08: // START transmitido
-        case 0x10: // Repeated START transmitido
+    switch (TWSR & 0xF8) { 
+        // START condition
+        case 0x08: // START send
+        case 0x10: // Repeated START send
             if (more_data_to_send) {
-                // Operação de escrita: SLA+W (escrita)
+                // SLA+W (write)
                 TWDR = (SLAVE_ADDRESS << 1); // SLA+W
             } else {
-                // Operação de leitura: SLA+R (leitura)
+                // SLA+R (read)
                 TWDR = (SLAVE_ADDRESS << 1) | 1; // SLA+R
             }
-            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT); // Continua
+            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT);
             break;
 
-        // Escrita
-        case 0x18: // SLA+W transmitido, ACK recebido
-        case 0x28: // Dado transmitido, ACK recebido
+        // Write operation
+        case 0x18: // SLA+W send, ACK received
+        case 0x28: // Dado send, ACK received
             if (data_index < sizeof(data_to_send) && data_to_send[data_index]) {
-                TWDR = data_to_send[data_index++]; // Envia próximo dado
-                TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT); // Continua
+                TWDR = data_to_send[data_index++]; // Next data
+                TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT);
             } else {
-                more_data_to_send = false; // Todos os dados enviados
-                TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWSTO); // Envia STOP
+                more_data_to_send = false; 
+                TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWSTO); // Send STOP
             }
             break;
 
-        // Leitura
-        case 0x40: // SLA+R transmitido, ACK recebido
-            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Prepara para receber dado com ACK
+        // Read operation
+        case 0x40: // SLA+R send, ACK receided
+            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Send ACK
             break;
 
-        case 0x50: // Dado recebido, ACK enviado
-        case 0x58: // Dado recebido, NACK enviado
-            received_data = TWDR; // Lê o último dado
-            read_complete = true; // Define a flag indicando que a leitura foi concluída
-            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWSTO); // Envia STOP
+        case 0x50: // Data received, ACK send
+        case 0x58: // Data received, NACK send
+            received_data = TWDR; 
+            read_complete = true; // Notify the end of the read operation
+            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWSTO); // Send STOP
             break;
 
-        // Erros ou estados inesperados
-        case 0x20: // SLA+W transmitido, NACK recebido
-        case 0x30: // Dado transmitido, NACK recebido
-        case 0x48: // SLA+R transmitido, NACK recebido
+        // Errors
+        case 0x20: // SLA+W send, NACK receided
+        case 0x30: // Dado send, NACK received
+        case 0x48: // SLA+R send, NACK received
         default:
-            TWCR = (1 << TWEN) | (1 << TWSTO) | (1 << TWINT); // Envia STOP
-            more_data_to_send = 0; // Finaliza transmissão
-            read_complete = 1; // Finaliza leitura em caso de erro
+            TWCR = (1 << TWEN) | (1 << TWSTO) | (1 << TWINT); // Send STOP
+            more_data_to_send = 0; // End transmition
+            read_complete = 1; // End reading
             break;
     }
 }
