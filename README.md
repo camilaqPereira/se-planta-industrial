@@ -2,7 +2,7 @@
 
 <h3 align="center">Sistema embarcado para automação de uma planta industrial</h3>
 
-<p align="center">O 'Sistema Integrado de produção' monitora a produção de blocos de madeira via Arduino Nano, integrando sensores e atuadores
+<p align="center">O Sistema Integrado de Produção monitora a produção de blocos de madeira via Arduino Nano, integrando sensores e atuadores
 de segurança para garantir uma operação segura e precisa.</p>
 
 <h4 align="center">
@@ -55,6 +55,7 @@ de segurança para garantir uma operação segura e precisa.</p>
   
   #### Chão de fábrica
   - Botão de parada: interrupção e/ou retomada da produção a qualquer momento;
+  - Controle de motores CC para cortes verticais e horizontais (100 rotações = 5cm de madeira cortados);
   - Corte de blocos de madeira no tamanho 10cm x 25cm;
   - Contagem da quantidade de blocos cortados (**NÃO FUNCIONAL**);
   - Monitoramento da temperatura do sistema: faixa de operação 10°C a 40°C;
@@ -108,6 +109,8 @@ Baseado no microcontrolador ATMega328p, o Arduino Nano é uma placa de desenvolv
 - Comunicação serial, SPI e I2C
 - Processador de 8 bits;
 - 32 registradores de propósito geral.
+
+As informações de configuração dos registradores pode ser encontrada no [datasheet do microcontrolador ATMega328p](https://www.alldatasheet.com/datasheet-pdf/view/1425005/MICROCHIP/ATMEGA328P.html)
 
 <div align="center">
   <figure>  
@@ -176,6 +179,32 @@ iii) desabilitadas durante a execução da rotina de tratamento de uma interrup�
 
 
 Todos os pinos podem gerar interrupções por mudança de nível lógico (PCINT0...23). No entanto, apenas os pinos INT0 e INT1 geram interrupções externas para
-nível lógico baxo, nível lógico alto, mudança de nívl lógico, borda de descida ou borda de subida.
+nível lógico baixo, nível lógico alto, mudança de nívl lógico, borda de descida ou borda de subida.
 
 </details>
+
+<details><summary><b>Timers de hardware</b></summary>
+
+### Timers de hardware
+
+O microcontrolador ATMega328/p é equipado com três temporizadores de hardware: TIMER0, TIMER1 E TIMER2. Estes timers são amplaente empregados em contagens 
+simples, contagens de eventos externos, geração de sinais PWM (2 canais por timer) e geração de frequência. Cada um dos contadores possui um divisor de clock de até
+10 bits, permitindo um controle preciso das temporizações.
+
+TIMER0 e TIMER2 são temporizadores de 8 bits que apresentam quatro modos de operação.:
+- Modo nomal: o temporizador conta continuamente de froma crescente de 0 a 255;
+- Modo CTC (clear timer on compare): o teporizador é zerado quando o contador atinge o valor TOP configurado (OCRxA);
+- Modo PWM rápido:geração de um sinal PWM de alta frequência. O timer conta de 0 a TOP. A saída pode ser não-invertida (OCxA limpo na igualdade de comparação) ou invertida (OCxA
+ativo na igualdade de comparação);
+- Modo PWM com fase corrigida: permite o ajuste da fase do sinal PWM. Baseia-se na contagem crescente e decrescente do contador, e é mais lento e preciso que o modo pwm rápido.
+
+Por sua vez, TIMER1 é um temporizador de 16 bits que permite a utilização tanto de um clock interno como de um clock externo para a contagem. Além dos modos de operação já citados, TIMER1 pode operar ainda no modo PWM com correção de fase e frequência. Neste modo, o pulso sempre é simétrico ao ponto médio do período.
+
+
+> _NOTE_
+>
+> O TIMER2 permite o uso de um clock independente (externo) para a contagem precisa de 1s. 
+</details>
+
+
+## Solução proposta
