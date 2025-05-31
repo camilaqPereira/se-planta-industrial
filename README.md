@@ -96,12 +96,66 @@ placas populares como Raspberry Pi Pico/W, Arduino e ESP32, além componentes el
 
 ## Arduino Nano
 
-<details><summary><b>Visão geral do Arduino Nano</b></summary></details>
+<details><summary><b>Visão geral do Arduino Nano</b></summary>
 
-Baseado no microcontrolador ATMega328p, o Arduino Nano é uma placa compacta, versátil e compatível com protoboards. Esta placa apresenta 14 pinos digitais, dos quais 6 podem ser 
-configurados como saídas PWM, e 8 pinos analógicos. Além disso, possui comunicação serial, I2C e SPI.
+### Visão geral do Arduino Nano
+
+Baseado no microcontrolador ATMega328p, o Arduino Nano é uma placa de desenvolvimento compacta, versátil e compatível com protoboards. Dentre suas características, destacam-se:
+- clock de 16MHz;
+- 14 pinos digitais de entrada e saída;
+- 6 saídas PWM;
+- 8 saídas analógicas;
+- Comunicação serial, SPI e I2C
+- Processador de 8 bits;
+- 32 registradores de propósito geral.
+
+<div align="center">
+  <figure>  
+    <img src="docs/nano.png" width="600px">
+    <figcaption>
+      <p align="center"> 
+
+[**Figura 1** - Arduino Nano](https://docs.arduino.cc/hardware/nano/)
+
+</p>
+    </figcaption>
+  </figure>
+</div>
 
 </details>
 
-<details><summary><b>Diagrama de pinos do Arduino Nano</b></summary></details>
-![image](https://github.com/user-attachments/assets/6235cf3c-0075-49cd-8a4c-d6155d92b94f)
+<details><summary><b>Diagrama de pinos do Arduino Nano</b></summary>
+
+### Diagrama de pinos do Arduino Nano
+
+<div align="center">
+  <figure>  
+    <img src="docs/nano-pinout.png" width="600px">
+    <figcaption>
+      <p align="center"> 
+
+[**Figura 2** - Diagrama de pinos do Arduino Nano](https://docs.arduino.cc/hardware/nano/)
+
+</p>
+    </figcaption>
+  </figure>
+</div>
+
+
+</details>
+
+<details><summary><b>Portas de entrada e saída</b></summary>
+
+### Portas de entrada e saída
+
+O ATMega328/p possui três conjuntos de portas I/O: PORTB (PB7, ..., PB0), PORTC (PC7, ..., PC0) E PORTD (PD7, ..., PD0). Cada uma destes pinos podem ser lidos, modificados ou escritos individualmente. Os registradores para controle das portas de entrada e saída são:
+- PORTx: registrador de dados usado para escrita naos pinos;
+- DDRx: registrador de direção usado para definir a direção dos pinos (entrada ou saída);
+- PINx: registrador de entrada usado leitura do conteúdo dos pinos.
+
+> _NOTE_
+>
+> Todos os pinos do ATMega328/p possuem resistores _pull up_ internos, além de diodos de proteção entre o Vcc e o ground e um acapacitância de 10 pF
+
+
+</details>
