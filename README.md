@@ -396,3 +396,174 @@ O ADC foi configurado para o modo contínuo com prescaler de 128 em ambas as ent
 </details>
 
 ## Testes
+
+A fim de otimizar a validação do sistema, utilizou-se a IA Gemini 2.5 Flash para gerar os casos de teste a serem executados. Cada caso de teste contém as pré-condições necessárias, os passos e os resultados esperados. Os casos foram executados e os respectivos resultados obtidos são apresentados.
+
+<details><summary><b>Inicialização do sistema</b></summary>
+
+### Inicialização do sistema
+- **Pré-condições**: Ambos os Arduinos conectados e energizados.
+- **Passos**:
+	1. Energizar os Arduinos.
+ 	2. Pressionar o botão de emergência para iniciar a produção 
+	3. Verificar as mensagens iniciais no Monitor Serial de ambos os Arduinos.
+	4. Assegurar que não há condições de parada ativas (interruptor desligado, temperatura na faixa, inclinação correta, sem presença humana).
+	5. Verificar se o LED verde do Chão de Fábrica está aceso.
+	6. Observar se os motores de corte estão funcionando (se a lógica de habilitação inicial permitir).
+- **Resultados esperados**:
+	- Ambos os Arduinos inicializam sem erros.
+	- O Chão de Fábrica transita para o estado de "Produção Normal".
+	- O LED verde no Chão de Fábrica está aceso.
+	- Os motores de corte estão ativos.
+ 	- O monitor serial de ambas as entidades deve exibir a mensagem de inicialização da produção. 
+- **Resultados alcançados**: Amboas as entidades foram inicializadas sem erros. Entretanto, para um melhor sincronismo, observou-se que o supervisor deve ser inicializado primeiro.
+
+</details>
+<details><summary><b>Controle de velocidade dos motores</b></summary>
+
+### Controle de velocidade dos motores
+- **Pré-condições**: Sistema em estado de "Produção Normal".
+- **Passos 2.1**: Ajuste de Velocidade do Motor Vertical
+	1. Girar o potenciômetro correspondente ao motor vertical no Supervisor.
+	2. Observar a velocidade do motor vertical no Chão de Fábrica.
+- **Resultados Esperados 2.1**: A velocidade do motor vertical é diretamente proporcional ao ajuste do potenciômetro do Supervisor.
+    
+- **Passos 2.2**: Ajuste de Velocidade do Motor Horizontal
+	1. Girar o potenciômetro correspondente ao motor horizontal no Supervisor.
+	2. Observar a velocidade do motor horizontal no Chão de Fábrica.
+- **Resultados Esperados 2.2**: A velocidade do motor horizontal é diretamente proporcional ao ajuste do potenciômetro do Supervisor.
+- **Resultados alcanção**: Equivalentes aos resultados esperados.
+  
+</details>
+<details><summary><b>Parada por interruptor</b></summary>
+
+### Parada por interruptor
+- **Pré-condições**: Sistema em estado de "Produção Normal", motores em funcionamento.
+- **Passos 3.1**: Acionamento do Interruptor de Parada
+	1. Acionar o interruptor de parada no Chão de Fábrica ou no Supervisor".
+- **Resultados Esperados 3.1**:
+	1. Os motores de corte param imediatamente.
+	2. O LED verde no Chão de Fábrica apaga.
+	3. O Monitor Serial do Chão de Fábrica exibe "Parada realizada com sucesso!".
+	4. O Monitor Serial do Supervisor exibe "Parada solicitada" (caso o interruptor seja acionado no supervisor) e "Parada realizada com sucesso!".
+	5. O Chão de Fábrica transiciona para o estado de "Parada".
+- Equivalentes aos resultados esperados.: Retorno da Parada por Interruptor
+	1. Após a parada (do Caso 3.1), desativar o interruptor de parada.
+- **Resultados Esperados 3.2**:
+	1. O Chão de Fábrica transiciona de volta para o estado de "Produção Normal".
+	2. O LED verde no Chão de Fábrica acende.
+	3. Os motores de corte reiniciam (se as outras condições de produção estiverem OK).
+ 	4. O monitor serial de ambas as entidades deve exibir a mensagem de inicialização da produção. 
+- **Resultados alcançados**: Equivalentes aos resultados esperados.
+
+</details>
+
+<details><summary><b>Parada por temperatura crítica</b></summary>
+
+ ### Parada por temperatura crítica
+- **Pré-condições**: Sistema em estado de "Produção Normal", temperatura dentro da faixa.
+- **Passos 4.1**: Temperatura Excede o Limite Superior (40°C)
+	1. Simular (ou causar) a temperatura exceder 40°C.
+- **Passos 4.2**: Temperatura Abaixo do Limite Inferior (10°C)
+	1. Simular (ou causar) a temperatura cair abaixo de 10°C.
+- **Resultados Esperados 4.1 e 4.2**:
+	1. O LED vermelho no Chão de Fábrica liga.
+	2. O Buzzer no Chão de Fábrica aciona.
+	3. Os motores de corte param imediatamente.
+	4. O LED verde no Chão de Fábrica apaga.
+	5.O Monitor Serial do Chão de Fábrica e do Supervisor exibem "Temperatura Crítica!" e "Parada realizada com sucesso!".
+	7. O Chão de Fábrica transiciona para o estado de "Parada".
+- **Passos 4.3**: Temperatura Retorna à Faixa Normal
+	1. Após a parada (do Caso 4.1 ou 4.2), simular a temperatura retornando à faixa de 10°C a 40°C.
+- Resultados Esperados 4.3:
+	1.O LED vermelho no Chão de Fábrica apaga.
+	2. O Buzzer no Chão de Fábrica desliga.
+	3. O Chão de Fábrica transiciona de volta para o estado de "Produção Normal".
+	4. O LED verde no Chão de Fábrica acende.
+	5. Os motores de corte reiniciam (se as outras condições de produção estiverem OK).
+- **Resultados alcançados**: O sensor LM35 foi substituido por um potênciometro de 10K. O resultados foram equivalentes aos resultados esperados.
+
+</details>
+<details><summary><b>Parada por inclinação incorreta</b></summary>
+
+### Parada por inclinação incorreta
+- **Pré-condições**: Sistema em estado de "Produção Normal", madeira na inclinação correta.
+- **Passos 5.1**: Inclinação Fora do Eixo
+	1. Simular (ou causar) a inclinação da madeira estar fora do eixo correto.
+- **Resultados Esperados 5.1**:
+	1. O servo motor é acionado e tenta corrigir a posição.
+	2. Os motores de corte param imediatamente.
+	3. O LED verde no Chão de Fábrica apaga.
+	4. O Monitor Serial do Chão de Fábrica e do Supervisor exibem " Madeira fora do eixo." e "Parada realizada com sucesso! ".
+	5. O Chão de Fábrica transiciona para o estado de "Parada".
+- **Passos 5.2**: Inclinação Corrigida Pelo Servo
+	1. Após a parada (do Caso 5.1), esperar (ou simular) o servo corrigir a inclinação para a posição correta.
+- **Resultados Esperados**:
+	1. O Chão de Fábrica transiciona de volta para o estado de "Produção Normal".
+	2. O LED verde no Chão de Fábrica acende.
+	3. Os motores de corte reiniciam (se as outras condições de produção estiverem OK).
+- **Resultados alcançados**: Equivalentes aos resultados esperados.
+
+</details>
+<details><summary><b>Parada por presença humana</b></summary>
+
+### Parada por presença humana
+- **Pré-condições**: Sistema em estado de "Produção Normal", motores ativos.
+- Passos 6.1: Detecção de Presença Humana
+	1. Simular a presença humana perto da esteira (ativar o sensor de presença).
+- **Resultados Esperados 6.1**:
+	1. Os motores de corte param imediatamente.
+ 	2. O Monitor Serial do Chão de Fábrica e do Supervisor exibem a mensagem de presença detectada. 	
+	3. O Chão de Fábrica transiciona para o estado de "Parada".
+- **Passos 7.2**: Ausência de Presença Humana
+	1. Remover a simulação de presença humana (desativar o sensor de presença).
+- **Resultados Esperados 6.2**:
+  	1. O Chão de Fábrica transiciona de volta para o estado de "Produção Normal".
+	2. Os motores de corte reiniciam (se as outras condições de produção estiverem OK).
+
+- **Resultados alcançados**: Equivalentes aos resultados esperados.
+
+</details>
+
+<details><summary><b>Sensor de nível de óleo</b></summary>
+
+### Sensor de nível de óleo
+- **Pré-condições**: Sistema em estado de "Produção Normal".
+-** Passos 7.1**: Nível de Óleo no Limite Superior
+	1. Simular o nível do tanque de óleo atingindo o limite superior.
+- **Resultados Esperados 7.1**:
+	1. O sistema deve alertar sobre o nível superior no Monitor Serial do Chão de Fábrica e do Supervisor
+	2. A produção não deve parar necessariamente, mas o alerta deve ser visível.
+- **Passos 7.2**: Nível de Óleo no Limite Crítico Baixo
+	1. Simular o nível do tanque de óleo atingindo o limite crítico baixo.
+- **Resultados Esperados 7.2**:
+	1. O sistema deve alertar sobre o nível inferior no Monitor Serial do Chão de Fábrica e do Supervisor
+	2. A produção não deve parar necessariamente, mas o alerta deve ser visível e indicar criticidade.
+- **Resultados alcançados**: Equivalentes aos resultados esperados.
+
+</details>
+
+<details><summary><b>Múltiplas Condições de Parada Simultâneas</b></summary>
+
+### Múltiplas Condições de Parada Simultâneas
+- Pré-condições: Sistema em estado de "Produção Normal".
+- Passos 8.1: Interruptor + Temperatura Crítica
+	1. Acionar o interruptor de parada.
+	2. Simular a temperatura exceder o limite crítico.
+- Resultados Esperados 8.1:
+	1. Os motores param.
+	2. LED vermelho e Buzzer são ativados.
+	3. O LED verde apaga.
+	4. O Monitor Serial do Chão de Fábrica e do Supervisor exibem mensagens para ambas as condições ("Temperatura Crítica!" e "Parada realizada com sucesso!").
+- Passos 8.2: Inclinação Incorreta + Presença Humana
+	1. Simular inclinação incorreta.
+	2. Simular presença humana.
+- Resultados Esperados 8.2:
+	1. Os motores param.
+	2. O servo tenta corrigir a inclinação.
+	3. O LED verde apaga.
+	4. O Monitor Serial do Chão de Fábrica e do Supervisor exibem as mensagens de inclinação incorreta e presença detectada.
+	5. A condição de presença humana também deve ser respeitada, mantendo os motores desligados mesmo após a correção da inclinação, até que a presença seja desativada.
+- **Resultados alcançados**: Equivalentes aos resultados esperados.
+
+</details>
