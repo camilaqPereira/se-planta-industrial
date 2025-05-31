@@ -159,3 +159,23 @@ O ATMega328/p possui três conjuntos de portas I/O: PORTB (PB7, ..., PB0), PORTC
 
 
 </details>
+
+<details><summary><b>Interrupções</b></summary>
+
+As interrupções no ATMega328p são:
+
+i) _vetoradas_: as rotinas de tratamento das interrupções possuem endereço fixo;
+
+ii) _mascaráveis_: podem ser habilitadas individualmente;
+
+iii) desabilitadas durante a execução da rotina de tratamento de uma interrupção disparada anterior.
+
+> _NOTE_
+>
+> O ATMega328/p possui um bit de controle para habilitação de todas as interrupções: bit 1 do SREG.
+
+
+Todos os pinos podem gerar interrupções por mudança de nível lógico (PCINT0...23). No entanto, apenas os pinos INT0 e INT1 geram interrupções externas para
+nível lógico baxo, nível lógico alto, mudança de nívl lógico, borda de descida ou borda de subida.
+
+</details>
