@@ -101,14 +101,14 @@ placas populares como Raspberry Pi Pico/W, Arduino e ESP32, além componentes el
 
 ### Visão geral do Arduino Nano
 
-Baseado no microcontrolador ATMega328p, o Arduino Nano é uma placa de desenvolvimento compacta, versátil e compatível com protoboards. Dentre suas características, destacam-se:
+Baseado no microcontrolador ATMega328p, o Arduino Nano (Figura 1) é uma placa de desenvolvimento compacta, versátil e compatível com protoboards. Dentre suas características, destacam-se:
 - clock de 16MHz;
 - 14 pinos digitais de entrada e saída;
 - 6 saídas PWM;
 - 8 saídas analógicas;
 - Comunicação serial, SPI e I2C
 - Processador de 8 bits;
-- 32 registradores de propósito geral.
+- 32 registradores de propósito geral de 8 bits.
 
 As informações de configuração dos registradores pode ser encontrada no [datasheet do microcontrolador ATMega328p](https://www.alldatasheet.com/datasheet-pdf/view/1425005/MICROCHIP/ATMEGA328P.html)
 
@@ -130,6 +130,8 @@ As informações de configuração dos registradores pode ser encontrada no [dat
 <details><summary><b>Diagrama de pinos do Arduino Nano</b></summary>
 
 ### Diagrama de pinos do Arduino Nano
+
+Figura 2 apresenta o diagrama de pinos do Arduino Nano.
 
 <div align="center">
   <figure>  
@@ -225,7 +227,7 @@ No ATMega328p, o ADC apresenta uma resolução de 10 bits e um tempo de convers�
 O protocolo I2C permite a comunicação entre mestres e escravos por meio de dois barramentos: barramento de dados serial (SDA) que transporta endereços, dados e controle; e o barramento 
 de clock serial (SCL) que sicroniza o transmissor e receptor durante a comunicação. 
 
-Os dispositivos são classificados em mestres e escravos. Os mestres geram os sinais de clock e iniciam a transmissão. Por sua vez, os escravos recebem e executam os comandos dos escravos. Cada escravo possui um endereço de identificação.
+Os dispositivos são classificados em mestres e escravos. Os mestres geram os sinais de clock e iniciam a transmissão. Por sua vez, os escravos recebem e executam os comandos dos escravos. Cada escravo possui um endereço de identificação. Figura 3 apresenta um exemplo de uma interface I2C em um sistema embarcado.
 
 
 <div align="center">
@@ -243,10 +245,47 @@ Os dispositivos são classificados em mestres e escravos. Os mestres geram os si
 
 No microcontrolador ATMega328/p, a interface I2C, chamada de TWI (Two Wire Serial Interface), utiliza um endereçamento de 7 bits e suporta uma velocidade de até 400 kHz na transferência de dados. É fundamental que os pinos de SDA e SCL sejam conectados a resistores _pull up_ para garantr uma transmissão estável. 
 
-> [!TIP]
+> _TIP_
 > 
 > Para saber mais sobre o protocolo I2C acesse [Understanding I2C Bus | Texas Instruments](https://www.ti.com/lit/an/slva704/slva704.pdf).
 
 </details>
 
 ## Solução proposta
+
+<div align="center">
+  <figure>  
+    <img src="docs/diagrama.png">
+    <figcaption>
+      <p align="center"> 
+
+**Figura 4** - Diagrama da solução
+
+</p>
+    </figcaption>
+  </figure>
+</div>
+
+<div align="center">
+  <figure>  
+    <img src="docs/schematic.png">
+    <figcaption>
+      <p align="center"> 
+
+**Figura 5** - Esquemático do circuito montado
+
+</p>
+    </figcaption>
+  </figure>
+</div>
+
+> _WARNING_
+>
+> Para controlar os motores CC, deve-se utilizar uma Ponte H (por exemplo L298n). No esquemático da solução, este componente não foi adicionado para simplificar o circuito.
+
+### Configuração de periféricos
+
+<details><summary><b>Portas I/O</b></summary></details>
+<details><summary><b>Interrupções</b></summary></details>
+<details><summary><b>Timers</b></summary></details>
+<details><summary><b>Leituras ADC</b></summary></details>
