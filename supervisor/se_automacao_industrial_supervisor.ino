@@ -191,8 +191,8 @@ ISR(INT1_COMPA_vect){
 ISR(TWI_vect) {
     switch (TWSR & 0xF8) { 
         // START condition
-        case 0x08: // START send
-        case 0x10: // Repeated START send
+        case 0x08: // START sent
+        case 0x10: // Repeated START sent
             if (more_data_to_send) {
                 // SLA+W (write)
                 TWDR = (SLAVE_ADDRESS << 1); // SLA+W
@@ -204,8 +204,8 @@ ISR(TWI_vect) {
             break;
 
         // Write operation
-        case 0x18: // SLA+W send, ACK received
-        case 0x28: // Dado send, ACK received
+        case 0x18: // SLA+W sent, ACK received
+        case 0x28: // Dado sent, ACK received
             if (data_index < sizeof(data_to_send) && data_to_send[data_index]) {
                 TWDR = data_to_send[data_index++]; // Next data
                 TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT);
@@ -216,21 +216,21 @@ ISR(TWI_vect) {
             break;
 
         // Read operation
-        case 0x40: // SLA+R send, ACK receided
+        case 0x40: // SLA+R sent, ACK received
             TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Send ACK
             break;
 
-        case 0x50: // Data received, ACK send
-        case 0x58: // Data received, NACK send
+        case 0x50: // Data received, ACK sent
+        case 0x58: // Data received, NACK sent
             received_data = TWDR; 
             read_complete = true; // Notify the end of the read operation
             TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWSTO); // Send STOP
             break;
 
         // Errors
-        case 0x20: // SLA+W send, NACK receided
-        case 0x30: // Dado send, NACK received
-        case 0x48: // SLA+R send, NACK received
+        case 0x20: // SLA+W sent, NACK receided
+        case 0x30: // Dado sent, NACK received
+        case 0x48: // SLA+R sent, NACK received
         default:
             TWCR = (1 << TWEN) | (1 << TWSTO) | (1 << TWINT); // Send STOP
             more_data_to_send = 0; // End transmition
