@@ -322,6 +322,8 @@ correspondente a este dado. Os valores das identificações e suas respectivas d
 
 Tabela 1 e Tabela 2 listam, respectivamente, as portas I/O utilizadas (e suas configurações) pelo chão de fábrica e supervisor.
 
+<div align="center">
+	
 | Pino | Direção | Descrição |
 | :---: | :---: | :---: |
 | PD5 | Saída digital | Mestre: utilizado para solicitar ao mestre que inicie uma comunicação no modo leitura |
@@ -339,7 +341,10 @@ Tabela 1 e Tabela 2 listam, respectivamente, as portas I/O utilizadas (e suas co
 | PC1 | Entrada digital | Echo para HC-SR04 |
 
 <p>Tabela 1: Portas I/O usadas pelo chão de fábrica e suas respectivas configurações</p>
+</div>
 
+<div align="center">
+	
 | Pino | Direção | Descrição |
 | :---: | :---: | :---: |
 | A0 | Entrada analógica | Potênciometro |
@@ -347,7 +352,7 @@ Tabela 1 e Tabela 2 listam, respectivamente, as portas I/O utilizadas (e suas co
 | PD2 | Entrada digital | Botão |
 
 <p>Tabela 2: Portas I/O usadas pelo supervisor e suas respectivas configurações</p>
-
+</div>
 
 </details>
 <details><summary><b>Interrupções</b></summary>
@@ -356,10 +361,12 @@ Tabela 1 e Tabela 2 listam, respectivamente, as portas I/O utilizadas (e suas co
 - Chão de fábrica:
 	- INT0: utilizado para realizar a leitura do botão. Esta interrupção foi configurada para disparar na borda de descida;
 	- TIMER2_OVF: a interrupção no estouro do timer 2 foi ativada para realizar a leitura multiplexada ADC e leitura do sensor SW-520D de forma periódica;
-	- ADC: a leitura ADC por interrupção foi ativada. Os canais ADC usadosno projeto são intercalados;
+	- ADC: a leitura ADC por interrupção foi ativada. Os canais ADC usados no projeto são intercalados;
 	- TWI: a comunicação TWI foi implementada por meio de interrupções.
 - Supervisor:
   	- TIMER0_OVF: a interrupção no estouro do timer 0 foi ativada para realizar a leitura multiplexada ADC de forma periódica;
+  	- INT0: utilizado para leitura do botão de emergência;
+  	- INT1: utilizado para receber solicitação de transmissão de dados do escravo;
   	- ADC: a leitura ADC por interrupção foi ativada. Os canais ADC usadosno projeto são intercalados;
 	- TWI: a comunicação TWI foi implementada por meio de interrupções.
 
@@ -384,7 +391,8 @@ um período de contagem de 3s (**NÃO FUNCIONAL**)
 
 #### Leituras ADC
 
-O ADC foi configurado para o modo contínuo com prescaler de 128 em ambas as partes. O bit ADATE não foi ativado, pois mais de um canal do ADC foi utilizado. A sinalização para o 
-início de uma nova conversão é realizada no estouro do timer 2 e timer 1 no chão de fábrica e no supervisor, respectivamente.
+O ADC foi configurado para o modo contínuo com prescaler de 128 em ambas as entidades do projeto. O bit ADATE não foi ativado, pois mais de um canal do ADC foi utilizado. A sinalização para o início de uma nova conversão é realizada na ISR do estouro do timer 2 e timer 1, respectivamente, no chão de fábrica e no supervisor.
 
 </details>
+
+## Testes
