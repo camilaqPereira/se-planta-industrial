@@ -165,21 +165,21 @@ O ATMega328/p possui três conjuntos de portas I/O: PORTB (PB7, ..., PB0), PORTC
 
 <details><summary><b>Interrupções</b></summary>
 
+### Interrupções
 As interrupções no ATMega328p são:
 
-i) _vetoradas_: as rotinas de tratamento das interrupções possuem endereço fixo;
+- _vetoradas_: as rotinas de tratamento das interrupções possuem endereço fixo;
 
-ii) _mascaráveis_: podem ser habilitadas individualmente;
+- _mascaráveis_: podem ser habilitadas individualmente;
 
-iii) desabilitadas durante a execução da rotina de tratamento de uma interrupção disparada anterior.
+- desabilitadas durante a execução da rotina de tratamento de uma interrupção disparada anterior.
+
+Todos os pinos podem gerar interrupções por mudança de nível lógico (PCINT0...23). No entanto, apenas os pinos INT0 e INT1 geram interrupções externas para
+nível lógico baixo, nível lógico alto, mudança de nívl lógico, borda de descida ou borda de subida.
 
 > _NOTE_
 >
 > O ATMega328/p possui um bit de controle para habilitação de todas as interrupções: bit 1 do SREG.
-
-
-Todos os pinos podem gerar interrupções por mudança de nível lógico (PCINT0...23). No entanto, apenas os pinos INT0 e INT1 geram interrupções externas para
-nível lógico baixo, nível lógico alto, mudança de nívl lógico, borda de descida ou borda de subida.
 
 </details>
 
@@ -206,5 +206,47 @@ Por sua vez, TIMER1 é um temporizador de 16 bits que permite a utilização tan
 > O TIMER2 permite o uso de um clock independente (externo) para a contagem precisa de 1s. 
 </details>
 
+
+<details><summary><b>Conversor analógico digital</b></summary>
+
+### Conversor analógico digital
+
+Os valores analógicos são grandezas que variam continuamente dentro de um intervalo. Para realizar o processamento destas grandezas em sistemas digitais, é necessário mapear o valor analógico real para um valor discreto. Este mapeamento ocorre por meio da amostragem e quantização do sinal analógico. Neste contexto, os conversores AD são 
+utilizados para conversão das grandezas analógicas. 
+
+No ATMega328p, o ADC apresenta uma resolução de 10 bits e um tempo de conversão de 13 a 260 us. Este periférico integra com seis canais multiplexados, permitindo a leitura de diferentes entrdas analógicas. Além disso, opera em dois modos distintos: modo simples para conversões únicas ou modo contínuo para leitura constante de dados.
+
+</details>
+
+<details><summary><b>Protocolo de comunicação I2C</b></summary>
+
+### Protocolo de comunicação I2C
+
+O protocolo I2C permite a comunicação entre mestres e escravos por meio de dois barramentos: barramento de dados serial (SDA) que transporta endereços, dados e controle; e o barramento 
+de clock serial (SCL) que sicroniza o transmissor e receptor durante a comunicação. 
+
+Os dispositivos são classificados em mestres e escravos. Os mestres geram os sinais de clock e iniciam a transmissão. Por sua vez, os escravos recebem e executam os comandos dos escravos. Cada escravo possui um endereço de identificação.
+
+
+<div align="center">
+  <figure>  
+    <img src="docs/i2c.png" width="600px">
+    <figcaption>
+      <p align="center"> 
+
+[**Figura 3** -Exemplo de barramento I2C em um sistema embarcado](https://www.ti.com/lit/an/slva704/slva704.pdf)
+
+</p>
+    </figcaption>
+  </figure>
+</div>
+
+No microcontrolador ATMega328/p, a interface I2C, chamada de TWI (Two Wire Serial Interface), utiliza um endereçamento de 7 bits e suporta uma velocidade de até 400 kHz na transferência de dados. É fundamental que os pinos de SDA e SCL sejam conectados a resistores _pull up_ para garantr uma transmissão estável. 
+
+> [!TIP]
+> 
+> Para saber mais sobre o protocolo I2C acesse [Understanding I2C Bus | Texas Instruments](https://www.ti.com/lit/an/slva704/slva704.pdf).
+
+</details>
 
 ## Solução proposta
