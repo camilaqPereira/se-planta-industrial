@@ -403,14 +403,14 @@ ISR(ADC_vect){
 
 ISR(TWI_vect) {
 
-  switch (TWSR & 0xF8) { // Máscara para ignorar os 3 bits menos significativos
-    // Escrita: Mestre quer enviar dados
-    case 0x60: // SLA+W recebido, ACK enviado
+  switch (TWSR & 0xF8) { 
+    // Write operation: Master wants to send data
+    case 0x60: // SLA+W received, ACK sent
       i2c_com_state = I2C_RECEIVING_OPCODE;
-      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Prepara para receber dado
+      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); 
       break;
 
-    case 0x80: // Dado recebido, ACK enviado
+    case 0x80: // Dado received, ACK sent
       
       switch(i2c_com_state){
         
@@ -434,23 +434,23 @@ ISR(TWI_vect) {
           break;
       }  
                       
-      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Prepara para receber mais dados
+      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); 
       break;
 
-    // Leitura: Mestre quer ler dados
-    case 0xA8: // SLA+R recebido, ACK enviado
-      TWDR = active_errors; // Prepara o dado a ser enviado
-      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT); // Continua enviando
+    // Reading operation: Master wants to read data
+    case 0xA8: // SLA+R received, ACK sent
+      TWDR = active_errors;
+      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT);
       break;
 
-    case 0xC0: // Dado enviado, NACK recebido
-    case 0xC8: // Último dado enviado, ACK recebido
-      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Prepara para próxima comunicação
+    case 0xC0: // Data sent, NACK received
+    case 0xC8: // Last data sent, ACK received
+      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); //Next transmition
       break;
 
-    // Erro ou estado inesperado
+    // Error
     default:
-      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Reinicia o TWI
+      TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT); // Restart TWI
       break;
   }
 }
